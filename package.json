@@ -1,0 +1,20 @@
+{
+  "name": "ef-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bcrypt": "^0.8.0",
+    "body-parser": "^1.10.0",
+    "express": "^4.10.4",
+    "express-jwt": "^2.0.1",
+    "jsonwebtoken": "^4.1.0",
+    "mongoose": "^3.8.20",
+    "validator": "^3.34.0"
+  }
+}
