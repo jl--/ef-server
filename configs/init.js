@@ -24,6 +24,7 @@ module.exports = function init() {
                 if(u){
                     var profile = new Profile();
                     profile.uid = u._id;
+                    profile.phone = u.phone;
                     profile.save();
                 }
             });

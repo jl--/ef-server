@@ -9,6 +9,7 @@ var genderEnum = ['female,male','private'];
 
 var Profile = new Schema({
     uid: {type: Schema.Types.ObjectId},
+    phone: {type: String, required: true, index: {unique: true}, trim: true},
     name: {type:String,trim: true}
 });
 

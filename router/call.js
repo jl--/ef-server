@@ -1,13 +1,13 @@
 'use strict';
 
 var config = require('../configs/config');
-var Message = require('../models/message');
+var Call = require('../models/call');
 var jwt = require('express-jwt');
 var router = require('express').Router();
 
 
-router.param('messageIds',function(req,res,next,messageIds){
-    req.messageIds = messageIds.split('|');
+router.param('callIds',function(req,res,next,callIds){
+    req.callIds = callIds.split('|');
     next();
 });
 
@@ -15,12 +15,12 @@ router.route('/')
     .get(jwt({
         secret: config.auth.secretToken
     }), function(req, res) {
-        Message.find({
+        Call.find({
             uid: req.user.uid
-        },function(err, message) {
-            return message ? res.status(200).send({
+        },function(err, call) {
+            return call ? res.status(200).send({
                 status: 1,
-                list: message
+                list: call
             }) : res.status(404).send({
                 status: 0,
                 error: err
@@ -31,18 +31,17 @@ router.route('/')
         secret: config.auth.secretToken
     }), function(req,res){
         var data = req.body;
-        var message = new Message({
+        var call = new Call({
             uid: req.user.uid,
-            sender_phone: data.sender_phone,
-            sender_name: data.sender_name,
-            content: data.content,
+            caller_name: data.caller_name,
+            caller_phone: data.caller_phone,
             status: data.status || 'P',
             date: data.date || (new Date()).getTime()
         });
-        message.save(function(err,m){
-            return m ? res.status(200).send({
+        call.save(function(err,c){
+            return c ? res.status(200).send({
                 status: 1,
-                message: m
+                call: c
             }) : res.status(404).send({
                 status: 0,
                 error: err
@@ -52,16 +51,16 @@ router.route('/')
     .delete(jwt({
         secret: config.auth.secretToken
     }),function(req,res){
-        var mids = req.body.messageIds.split('|');
-        Message.remove({
+        var cids = req.body.callIds.split('|');
+        Call.remove({
             _id: {
-                $in: mids
+                $in: cids
             }
         }, function (err,numAffected) {
             return numAffected ? res.status(200).send({
                 status: 1,
                 numAffected:numAffected,
-                deletedIds: req.body.messageIds
+                deletedIds: req.body.callIds
             }) : res.status(400).send({
                 status: 0,
                 error: err
@@ -73,11 +72,11 @@ router.route('/status')
     .put(jwt({
         secret: config.auth.secretToken
     }),function(req,res){
-        var mids = req.body.messageIds.split('|');
+        var cids = req.body.callIds.split('|');
         var toStatus = req.body.status === 'P' ? 'P' : 'R';
-        Message.update({
+        Call.update({
             _id: {
-                $in: mids
+                $in: cids
             }
         },{
             $set: {
@@ -89,9 +88,12 @@ router.route('/status')
             return numAffected ? res.status(200).send({
                 status: 1,
                 numAffected:numAffected,
-                messageIds: req.body.messageIds,
+                callIds: req.body.callIds,
                 toStatus: toStatus
-            }) : res.status(400).send(err || {});
+            }) : res.status(400).send({
+                status: 0,
+                error: err
+            });
         });
     });
 

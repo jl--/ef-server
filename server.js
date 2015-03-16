@@ -32,6 +32,7 @@ app.use('/accounts',router.account);
 app.use('/sessions',router.session);
 app.use('/profiles',router.profile);
 app.use('/messages',router.message);
+app.use('/calls',router.call);
 
 app.listen(config.server.port, config.server.address);
 console.log(config.server.address + ':' + config.server.port);

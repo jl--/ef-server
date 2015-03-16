@@ -36,6 +36,7 @@ router.route('/')
                 if(u){
                     var profile = new Profile();
                     profile.uid = u._id;
+                    profile.phone = u.phone;
                     profile.save(function(err,p){
                         return res.status(201).send({
                             status: 1
