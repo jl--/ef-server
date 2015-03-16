@@ -36,7 +36,13 @@ router.route('/')
             date: (new Date()).getTime()
         });
         message.save(function(err,m){
-            return m ? res.status(200).send(m) : res.status(404).send(err || {});
+            return m ? res.status(200).send({
+                status: 1,
+                message: m
+            }) : res.status(404).send({
+                status: 0,
+                error: err
+            });
         });
     })
     .delete(jwt({
