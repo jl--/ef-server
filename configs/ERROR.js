@@ -15,7 +15,7 @@ var ERROR = {
     ACCOUNT_NOT_MATCH: 'account info not match',
 
     // ensure unique
-    PHONE_TAKEN: 'email taken',
+    PHONE_TAKEN: 'phone taken',
 
     // existance
     ACCOUNT_NOT_EXISTS: 'account not exist.'
