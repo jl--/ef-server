@@ -41,7 +41,7 @@ router.route('/')
                         uid: user.id,
                         phone: user.phone
                     }, config.auth.secretToken, {
-                        expiresInMinutes: config.auth.expiresInMinutes
+                        expiresInMinutes: req.body.client === 'app' ? 525600 : config.auth.expiresInMinutes
                     });
                     return res.status(201).send({
                         status: 1,
