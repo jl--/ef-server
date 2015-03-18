@@ -4,22 +4,40 @@ var config = require('../configs/config');
 var Message = require('../models/message');
 var jwt = require('express-jwt');
 var router = require('express').Router();
-
-
-router.param('messageIds',function(req,res,next,messageIds){
-    req.messageIds = messageIds.split('|');
-    next();
-});
+var archive = require('../utils/archive');
 
 router.route('/')
     .get(jwt({
         secret: config.auth.secretToken
     }), function(req, res) {
-        Message.find({
-            uid: req.user.uid
-        },function(err, message) {
+        var conditions = {};
+        var fields = null;
+        var opts = {};
+
+        conditions.uid = req.user.uid;
+
+        if(req.query.status) conditions.status = req.query.status;
+        if(req.query.page){
+            opts.limit = config.app.perPage;
+            opts.skip = (req.query.page - 1) * config.app.perPage;
+        }
+        opts.sort = {
+            date: -1
+        };
+
+        var query = Message.find(conditions,fields,opts);
+        query.exec(function(err, message) {
+            if(message && req.query.archive){
+                message = archive(message);
+                return res.status(200).send({
+                    status: 1,
+                    archive: message
+                });
+            }
             return message ? res.status(200).send({
                 status: 1,
+                currentPage: req.query.page || 1,
+                count: message.length,
                 list: message
             }) : res.status(404).send({
                 status: 0,
@@ -92,6 +110,22 @@ router.route('/status')
                 messageIds: req.body.messageIds,
                 toStatus: toStatus
             }) : res.status(400).send(err || {});
+        });
+    });
+
+router.route('/page_count')
+    .get(jwt({
+        secret: config.auth.secretToken
+    }),function(req,res){
+        var query = {};
+        Message.count(query,function(err,count){
+            return count !== undefined ? res.status(200).send({
+                status: 1,
+                pageCount: Math.ceil(count / config.app.perPage)
+            }) : res.status(400).send({
+                status: 0,
+                error: err
+            });
         });
     });
 

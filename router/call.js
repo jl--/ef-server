@@ -15,17 +15,34 @@ router.route('/')
     .get(jwt({
         secret: config.auth.secretToken
     }), function(req, res) {
-        Call.find({
-            uid: req.user.uid
-        },function(err, call) {
+        var conditions = {};
+        var fields = null;
+        var opts = {};
+
+        conditions.uid = req.user.uid;
+
+        if(req.query.status) conditions.status = req.query.status;
+        if(req.query.page){
+            opts.limit = config.app.perPage;
+            opts.skip = (req.query.page - 1) * config.app.perPage;
+        }
+        opts.sort = {
+            date: -1
+        };
+
+        var query = Call.find(conditions,fields,opts);
+        query.exec(function(err, call) {
             return call ? res.status(200).send({
                 status: 1,
+                currentPage: req.query.page || 1,
+                count: call.length,
                 list: call
             }) : res.status(404).send({
                 status: 0,
                 error: err
             });
         });
+
     })
     .post(jwt({
         secret: config.auth.secretToken
@@ -97,5 +114,20 @@ router.route('/status')
         });
     });
 
+router.route('/page_count')
+    .get(jwt({
+        secret: config.auth.secretToken
+    }),function(req,res){
+        var query = {};
+        Call.count(query,function(err,count){
+            return count !== undefined ? res.status(200).send({
+                status: 1,
+                pageCount: Math.ceil(count / config.app.perPage)
+            }) : res.status(400).send({
+                status: 0,
+                error: err
+            });
+        });
+    });
 
 module.exports = router;

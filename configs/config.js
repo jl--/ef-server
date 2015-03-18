@@ -26,3 +26,8 @@ exports.auth = {
     secretToken: 'secretToken',
     expiresInMinutes: 600
 };
+
+
+exports.app = {
+    perPage: 4
+};
