@@ -15,7 +15,6 @@ router.route('/')
         var error = {};
         error.status = 0;
 
-
         error.msg = req.body.phone ? undefined : ERROR.PHONE_REQUIRED;
         error.msg = error.msg || (req.body.password ? undefined : ERROR.PASSWORD_REQUIRED);
 
