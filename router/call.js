@@ -45,7 +45,7 @@ router.route('/')
                 currentPage: req.query.page || 1,
                 count: call.length,
                 list: call
-            }) : res.status(404).send({
+            }) : res.status(200).send({
                 status: 0,
                 error: err
             });
@@ -67,7 +67,7 @@ router.route('/')
             return c ? res.status(200).send({
                 status: 1,
                 call: c
-            }) : res.status(404).send({
+            }) : res.status(200).send({
                 status: 0,
                 error: err
             });
@@ -86,7 +86,7 @@ router.route('/')
                 status: 1,
                 numAffected:numAffected,
                 deletedIds: req.body.callIds
-            }) : res.status(400).send({
+            }) : res.status(200).send({
                 status: 0,
                 error: err
             });
@@ -115,7 +115,7 @@ router.route('/status')
                 numAffected:numAffected,
                 callIds: req.body.callIds,
                 toStatus: toStatus
-            }) : res.status(400).send({
+            }) : res.status(200).send({
                 status: 0,
                 error: err
             });
@@ -131,7 +131,7 @@ router.route('/page_count')
             return count !== undefined ? res.status(200).send({
                 status: 1,
                 pageCount: Math.ceil(count / config.app.perPage)
-            }) : res.status(400).send({
+            }) : res.status(200).send({
                 status: 0,
                 error: err
             });

@@ -13,7 +13,7 @@ router.route('/')
         secret: config.auth.secretToken
     }),function(req, res) {
         Profile.findOne({uid:req.user.uid},function(err, profile) {
-            return profile ? res.status(200).send({status: 1,profile: profile}) : res.status(404).send({status: 0, error: err});
+            return profile ? res.status(200).send({status: 1,profile: profile}) : res.status(200).send({status: 0, error: err});
         });
     });
 

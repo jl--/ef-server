@@ -20,7 +20,7 @@ router.route('/')
         error.msg = error.msg || (req.body.password ? undefined : ERROR.PASSWORD_REQUIRED);
 
         if (error.msg) {
-            return res.status(400).send(error);
+            return res.status(200).send(error);
         }
 
         User.findOne({
@@ -28,13 +28,13 @@ router.route('/')
         }).exec(function(err, user) {
             if (!user) {
                 error.msg = ERROR.ACCOUNT_NOT_EXISTS;
-                return res.status(400).send(error);
+                return res.status(200).send(error);
             }
             user.comparePassword(req.body.password, function(err, isMatch) {
                 error.msg = err ? 'terminal error' : undefined;
                 error.msg = error.msg || (!isMatch ? ERROR.ACCOUNT_NOT_MATCH : undefined);
                 if (error.msg) {
-                    return res.status(400).send(error);
+                    return res.status(200).send(error);
                 } else {
                     // sign a jwt token.
                     var token = jwt.sign({

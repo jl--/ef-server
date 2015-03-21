@@ -18,7 +18,7 @@ router.route('/')
         error.msg = error.msg || (data.password ? undefined : ERROR.PASSWORD_REQUIRED);
         error.msg = error.msg || (data.passwordConfirmation === data.password ? undefined : ERROR.PASSWORD_CONFIRMATION_INVALID);
         if(error.msg){
-            return res.status(400).send(error);
+            return res.status(200).send(error);
         }
 
         User.findOne({
@@ -26,7 +26,7 @@ router.route('/')
         },function(err,u){
             if(u){
                 error.msg = ERROR.PHONE_TAKEN;
-                return res.status(400).send(error);
+                return res.status(200).send(error);
             }
             var user = new User({
                 phone: data.phone,
