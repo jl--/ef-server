@@ -22,7 +22,6 @@ router.route('/')
         if (error.msg) {
             return res.status(200).send(error);
         }
-
         User.findOne({
             phone: req.body.phone
         }).exec(function(err, user) {
