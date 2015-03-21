@@ -7,6 +7,8 @@ var app = express();
 var router = require('./router');
 var init = require('./configs/init');
 
+var mqttServer = require('./utils/mqttServer');
+
 // init
 init();
 
@@ -33,6 +35,9 @@ app.use('/sessions',router.session);
 app.use('/profiles',router.profile);
 app.use('/messages',router.message);
 app.use('/calls',router.call);
+
+
+mqttServer.attachHttpServer(app);
 
 app.listen(config.server.port, config.server.address);
 console.log(config.server.address + ':' + config.server.port);

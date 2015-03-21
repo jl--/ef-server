@@ -4,6 +4,7 @@ var config = require('../configs/config');
 var Call = require('../models/call');
 var jwt = require('express-jwt');
 var router = require('express').Router();
+var archive = require('../utils/archive');
 
 
 router.param('callIds',function(req,res,next,callIds){
@@ -32,6 +33,13 @@ router.route('/')
 
         var query = Call.find(conditions,fields,opts);
         query.exec(function(err, call) {
+            if(call && req.query.archive){
+                call = archive(call);
+                return res.status(200).send({
+                    status: 1,
+                    archive: call
+                });
+            }
             return call ? res.status(200).send({
                 status: 1,
                 currentPage: req.query.page || 1,
