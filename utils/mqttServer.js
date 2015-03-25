@@ -1,40 +1,32 @@
-/**
- *
- * Created by jl on 3/19/15.
- */
 var mosca = require('mosca');
+var http = require('http');
+var httpServer = http.createServer();
 
-
-
-
-var moscaSettings = {
-    port: 1883
+var settings = {
+    port: 1886
 };
+
+var server = new mosca.Server(settings);
+server.attachHttpServer(httpServer);
 
 
 var authenticate = function(client, username, password, callback) {
-    console.log('haha c');
     var authorized = (username === 'alice' && password === 'secret');
     if (authorized) client.user = username;
     callback(null, authorized);
 };
 
-// In this case the client authorized as alice can publish to /users/alice taking
-// the username from the topic and verifing it is the same of the authorized user
 var authorizePublish = function(client, topic, payload, callback) {
     console.log('ac');
     callback(null, client.user == topic.split('/')[1]);
 };
 
-// In this case the client authorized as alice can subscribe to /users/alice taking
-// the username from the topic and verifing it is the same of the authorized user
 var authorizeSubscribe = function(client, topic, callback) {
     console.log('blabla');
     callback(null, client.user == topic.split('/')[1]);
 };
 
 
-var server = new mosca.Server(moscaSettings);
 
 
 
@@ -57,21 +49,9 @@ function setup() {
     //server.authorizePublish = authorizePublish;
     //server.authorizeSubscribe = authorizeSubscribe;
     console.log('Mosca server is up and running');
-    //var message = {
-    //    topic: '/hello/world',
-    //    payload: 'abcde', // or a Buffer
-    //    qos: 0, // 0, 1, or 2
-    //    retain: false // or true
-    //};
-    //
-    //server.publish(message, function() {
-    //    console.log('done!');
-    //});
 }
 
+//server.on('ready', setup);
 
-
-server.on('ready', setup);
-
-
+httpServer.listen(1885);
 module.exports = server;

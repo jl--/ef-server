@@ -35,9 +35,10 @@ app.use('/sessions',router.session);
 app.use('/profiles',router.profile);
 app.use('/messages',router.message);
 app.use('/calls',router.call);
+app.use('/contacts',router.contact);
 
 
-mqttServer.attachHttpServer(app);
+//mqttServer.attachHttpServer(app);
 
 app.listen(config.server.port, config.server.address);
 console.log(config.server.address + ':' + config.server.port);
