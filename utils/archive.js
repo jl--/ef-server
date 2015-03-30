@@ -2,7 +2,8 @@
  *
  * Created by jl on 3/17/15.
  */
-var archive = function(collection,flag){
+var archive = {};
+archive.withDate = function(collection){
     var len = collection.length;
     var archives = [];
     var item = null;
@@ -25,4 +26,21 @@ var archive = function(collection,flag){
     }
     return archives;
 };
+
+archive.withField = function (collection,field) {
+    var archives = {};
+    var group = null;
+    if(collection && collection.length > 0) {
+        collection.forEach(function(item){
+            group = archives[item[field]];
+            if(!group){
+                group = archives[item[field]] = [];
+            }
+            group.push(item);
+        });
+    }
+
+    return archives;
+};
+
 module.exports = archive;

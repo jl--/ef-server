@@ -27,13 +27,7 @@ router.route('/')
 
         var query = Contact.find(conditions,fields,opts);
         query.exec(function(err, contact) {
-            if(contact && req.query.archive){
-                //contact = archive(contact);
-                //return res.status(200).send({
-                //    status: 1,
-                //    archive: message
-                //});
-            }
+            contact = archive.withField(contact,'name');
             return contact ? res.status(200).send({
                 status: 1,
                 currentPage: req.query.page || 1,

@@ -34,7 +34,7 @@ router.route('/')
         var query = Call.find(conditions,fields,opts);
         query.exec(function(err, call) {
             if(call && req.query.archive){
-                call = archive(call);
+                call = archive.withDate(call);
                 return res.status(200).send({
                     status: 1,
                     archive: call

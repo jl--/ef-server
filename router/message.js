@@ -28,7 +28,7 @@ router.route('/')
         var query = Message.find(conditions,fields,opts);
         query.exec(function(err, message) {
             if(message && req.query.archive){
-                message = archive(message);
+                message = archive.withDate(message);
                 return res.status(200).send({
                     status: 1,
                     archive: message
