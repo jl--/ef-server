@@ -43,20 +43,42 @@ router.route('/')
         secret: config.auth.secretToken
     }), function(req,res){
         var data = req.body;
-        var contact = new Contact({
-            uid: req.user.uid,
-            name: data.name,
-            phone: data.phone
-        });
-        contact.save(function(err,c){
-            return c ? res.status(200).send({
-                status: 1,
-                contact: c
-            }) : res.status(200).send({
-                status: 0,
-                error: err
+        var list = req.body && req.body.list;
+
+
+        if(list){
+            /// mutli items, list
+            list.forEach(function(item){
+                item.uid = req.user.uid
             });
-        });
+            Contact.create(list,function(err){
+                if(err) return res.status(200).send({
+                    status: 0,
+                    err: err
+                });
+
+                return res.status(201).send({
+                    status: 1,
+                    list: Array.prototype.slice.call(arguments,1)
+                });
+            });
+        }else if(data){
+            //// single item
+            var contact = new Contact({
+                uid: req.user.uid,
+                name: data.name,
+                phone: data.phone
+            });
+            contact.save(function(err,c){
+                return c ? res.status(200).send({
+                    status: 1,
+                    contact: c
+                }) : res.status(200).send({
+                    status: 0,
+                    error: err
+                });
+            });
+        }
     })
     .delete(jwt({
         secret: config.auth.secretToken

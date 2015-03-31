@@ -14,8 +14,9 @@ init();
 
 
 app.use(bodyParser.urlencoded({
-  extended: false
+  extended: true
 }));
+//app.use(bodyParser.raw());
 app.use(bodyParser.json());
 app.all('*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', req.headers.origin);
