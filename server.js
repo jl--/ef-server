@@ -37,6 +37,7 @@ app.use('/profiles',router.profile);
 app.use('/messages',router.message);
 app.use('/calls',router.call);
 app.use('/contacts',router.contact);
+app.use('/webupload', router.webupload);
 
 
 //mqttServer.attachHttpServer(app);
